@@ -1,4 +1,5 @@
 import pygame
+import os
 
 # Initialize Pygame
 pygame.init()
@@ -66,7 +67,7 @@ def game_page():
         # draw_text("This is the game page!", FONT, BLACK, WIDTH // 2, HEIGHT // 2)
 
         # display images
-        image = pygame.transform.scale(pygame.image.load("/Users/jyang25/Desktop/python/cyberSafeSeniors/media/mountain.jpg"), ((WIDTH//2) - WIDTH//16, HEIGHT//2 - WIDTH//16))
+        image = pygame.transform.scale(pygame.image.load("mountain.jpeg"), ((WIDTH//2) - WIDTH//16, HEIGHT//2 - WIDTH//16))
         
         draw_text("Option 1", FONT, BLACK, (WIDTH// 4), (HEIGHT//4) - 40)
         screen.blit(image, ((WIDTH// 32), HEIGHT//4))
