@@ -1,3 +1,5 @@
+import struct
+
 import pygame
 import os
 
@@ -28,7 +30,7 @@ def draw_button(text, font, color, rect):
     draw_text(text, font, color, rect.centerx, rect.centery)
 
 # Main welcome page loop
-def welcome_page():
+def welcome_page(highscore):
     running = True
 
     while running:
@@ -39,6 +41,8 @@ def welcome_page():
 
         # Draw instruction
         draw_text("Click below to start the game.", FONT, BLACK, WIDTH // 2, HEIGHT // 2)
+
+        draw_text(f"Previous Highscore: {highscore}", FONT, BLACK, WIDTH // 2, HEIGHT - 15)
 
         # Draw button
         button_rect = pygame.Rect(WIDTH // 3, HEIGHT * 2 // 3, WIDTH // 3, HEIGHT // 6)
@@ -57,17 +61,16 @@ def welcome_page():
                     return "Game"
 
 # Blank game page loop
-def game_page():
+def game_page(highscore):
     running = True
+
+    score = 0
 
     while running:
         screen.fill(WHITE)
 
-        # Draw text on the blank game page
-        # draw_text("This is the game page!", FONT, BLACK, WIDTH // 2, HEIGHT // 2)
-
         # display images
-        image = pygame.transform.scale(pygame.image.load("mountain.jpeg"), ((WIDTH//2) - WIDTH//16, HEIGHT//2 - WIDTH//16))
+        image = pygame.transform.scale(pygame.image.load("resources/mountain.jpeg"), ((WIDTH // 2) - WIDTH // 16, HEIGHT // 2 - WIDTH // 16))
         
         draw_text("Option 1", FONT, BLACK, (WIDTH// 4), (HEIGHT//4) - 40)
         screen.blit(image, ((WIDTH// 32), HEIGHT//4))
@@ -81,13 +84,23 @@ def game_page():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+                return score if score > highscore else highscore
 
 # Main function to control the flow of the program
 def main():
-    next_page = welcome_page()
+    # setup
+    highscore = 0
+    if(os.path.exists("playerdata/playerdata.dat")):
+        with open("playerdata/playerdata.dat", 'r') as file:
+            lines = file.readlines()
+            if lines[0] != "":
+                highscore = int(lines[0])
+
+    next_page = welcome_page(highscore)
 
     if next_page == "Game":
-        game_page()
+        with open("playerdata/playerdata.dat", 'w') as file:
+            file.write(str(game_page(highscore)))
 
     pygame.quit()
 
